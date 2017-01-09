@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <title>CodePlayer</title>
+
+    <style rel="stylesheet" type="text/css" media="screen">
+        body {
+            padding: 0;
+            margin: 0;
+            font-family: Ubuntu, sans-serif;
+        }
+        #header {
+            width: 100%;
+            height: 40px;
+            background-color: black;
+
+        }
+        #logo {
+            font-weight: bold;
+            font-size: 1.6em;
+            float: left;
+            margin: 4px 0 0 10px;
+            color: white;
+        }
+        span {
+            font-weight: normal;
+        }
+        #buttonBar {
+            width: 267px;
+            margin: 0 auto;
+            padding: 4px;
+        }
+        .button {
+            float: left;
+            font-size: 1.1em;
+            padding: 5px;
+            border: 1px solid black;
+            border-left: none;
+            background-color: white;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: red;
+            color: white;
+        }
+        #html {
+            border-left: 1px solid black;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        #output {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+        #mainContainer {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+        }
+        textarea {
+            resize: none;
+            border-top: none;
+            border-left: none;
+            font-size: 1.1em;
+        }
+        .panel {
+            width: 100%;
+        }
+        iframe {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-bottom: 1px solid #A9A9A9;
+        }
+        .active {
+            background-color: #81e3f9;
+            color: black;
+        }
+        .active:hover {
+            background-color: #2ad1f7;
+            color: black;
+        }
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div id="logo">Code<span>Player</span></div>
+        <div id="buttonBar">
+            <div id="html" class="button active">HTML</div>
+            <div id="css" class="button active">CSS</div>
+            <div id="js" class="button active">JavaScript</div>
+            <div id="output" class="button active">Output</div>
+        </div>
+    </div>
+    <div id="mainContainer">
+        <textarea id="htmlPanel" class="panel" placeholder="HTML"></textarea>
+        <textarea id="cssPanel" class="panel" placeholder="CSS"></textarea>
+        <textarea id="jsPanel" class="panel" placeholder="JavaScript">Javascript has been disabled for reasons of security. You can edit the text but the code won't be executed.
+        </textarea>
+        <iframe id="outputPanel" class="panel"></iframe>
+    </div>
+
+    <script type="text/javascript">
+
+        function updateContent() {
+            $('#outputPanel').contents().find('html').html('<html><head><style>' + $('#cssPanel').val() + '</style></head><body>' + $('#htmlPanel').val() + '</body></html>');
+
+            // ACHTUNG!!! Running JS in an iframe is a major security risk and should NOT be implemented in production unless security is taken care of first.
+            // document.getElementById('outputPanel').contentWindow.eval($('#jsPanel').val());
+        }
+
+        $(document).ready(function() {
+
+            updateContent();
+
+            $('.button').click(function() {
+                $(this).toggleClass('active');
+                $('#' + this.id + 'Panel').toggleClass('hidden');
+            });
+
+            $('textarea').on('change keyup paste', function() {
+                updateContent();
+            });
+
+            $('#mainContainer').height($(window).height() - $('#header').height());
+        });
+
+    </script>
+
+</body>
+</html>
